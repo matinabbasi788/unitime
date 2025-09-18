@@ -1,4 +1,4 @@
-name: Build UniTime
+name: Build UniTime with CPSolver
 
 on:
   push:
@@ -26,19 +26,23 @@ jobs:
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
 
-    - name: Build with Maven
+    - name: Build CPSolver Module
+      run: |
+        if [ -d "CPSolver" ]; then
+          cd CPSolver
+          mvn clean install -DskipTests
+          cd ..
+        else
+          echo "CPSolver directory not found, please check the repository structure."
+          exit 1
+        fi
+
+    - name: Build UniTime
       run: mvn clean install -DskipTests
 
     - name: Run Tests
       run: mvn test
 
-    - name: Check for Maven Wrapper (Optional)
-      id: maven-wrapper
-      run: |
-        if [ -f "mvnw" ]; then
-          echo "using-wrapper=true" >> $GITHUB_OUTPUT
-        fi
-
-    - name: Build with Maven Wrapper (if available)
-      if: steps.maven-wrapper.outputs.using-wrapper == 'true'
-      run: ./mvnw clean install -DskipTests
+    - name: Debug on Failure
+      if: failure()
+      run: mvn clean install -e -X
