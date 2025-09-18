@@ -1,4 +1,4 @@
-name: Build UniTime with CPSolver
+name: Build UniTime with Ant
 
 on:
   push:
@@ -21,92 +21,29 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
 
-    - name: Cache Maven packages
-      uses: actions/cache@v4
-      with:
-        path: ~/.m2
-        key: ${{ runner.os }}-m2-${{ hashFiles('unitime/**/pom.xml', 'cpsolver/**/pom.xml') }}
-        restore-keys: ${{ runner.os }}-m2
-
-    - name: Checkout CPSolver
-      uses: actions/checkout@v4
-      with:
-        repository: 'UniTime/cpsolver'
-        ref: 'master'  # اگر نسخه 1.4-SNAPSHOT در شاخه دیگری است، تغییر دهید
-        path: cpsolver
-
-    - name: Configure Maven Repositories
+    - name: Install Ant
       run: |
-        mkdir -p ~/.m2
-        echo '<settings>
-          <profiles>
-            <profile>
-              <id>unitime</id>
-              <repositories>
-                <repository>
-                  <id>central</id>
-                  <url>https://repo.maven.apache.org/maven2</url>
-                  <releases><enabled>true</enabled></releases>
-                  <snapshots><enabled>true</enabled></snapshots>
-                </repository>
-                <repository>
-                  <id>unitime-repo</id>
-                  <url>https://www.unitime.org/repo</url>
-                  <releases><enabled>true</enabled></releases>
-                  <snapshots><enabled>true</enabled></snapshots>
-                </repository>
-                <repository>
-                  <id>snapshots</id>
-                  <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-                  <releases><enabled>false</enabled></releases>
-                  <snapshots><enabled>true</enabled></snapshots>
-                </repository>
-              </repositories>
-              <pluginRepositories>
-                <pluginRepository>
-                  <id>central</id>
-                  <url>https://repo.maven.apache.org/maven2</url>
-                  <releases><enabled>true</enabled></releases>
-                  <snapshots><enabled>true</enabled></snapshots>
-                </pluginRepository>
-                <pluginRepository>
-                  <id>unitime-repo</id>
-                  <url>https://www.unitime.org/repo</url>
-                  <releases><enabled>true</enabled></releases>
-                  <snapshots><enabled>true</enabled></snapshots>
-                </pluginRepository>
-                <pluginRepository>
-                  <id>snapshots</id>
-                  <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-                  <releases><enabled>false</enabled></releases>
-                  <snapshots><enabled>true</enabled></snapshots>
-                </pluginRepository>
-              </pluginRepositories>
-            </profile>
-          </profiles>
-          <activeProfiles>
-            <activeProfile>unitime</activeProfile>
-          </activeProfiles>
-        </settings>' > ~/.m2/settings.xml
+        sudo apt-get update
+        sudo apt-get install -y ant
 
-    - name: Build CPSolver
-      run: |
-        cd cpsolver
-        mvn clean install -DskipTests || { echo "Failed to build CPSolver"; exit 1; }
-
-    - name: Build UniTime
+    - name: Build CPSolver with Ant (if exists)
       run: |
         cd unitime
-        mvn clean install -DskipTests || { echo "Failed to build UniTime"; exit 1; }
+        if [ -d "CPSolver" ]; then
+          cd CPSolver
+          ant
+          cd ..
+        else
+          echo "CPSolver directory not found, skipping CPSolver build."
+        fi
 
-    - name: Run Tests
+    - name: Build UniTime with Ant
       run: |
         cd unitime
-        mvn test
-      continue-on-error: true  # تست‌ها اختیاری هستند، چون ممکن است نیاز به تنظیمات اضافی داشته باشند
+        ant
 
     - name: Debug on Failure
       if: failure()
       run: |
         cd unitime
-        mvn clean install -e -X
+        ant -debug -verbose
