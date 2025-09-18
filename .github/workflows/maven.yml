@@ -1,4 +1,4 @@
-name: Build UniTime with CPSolver
+name: Build UniTime
 
 on:
   push:
@@ -26,22 +26,9 @@ jobs:
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
 
-    - name: Check for CPSolver Module
-      id: check-cpsolver
+    - name: Add UniTime Repository
       run: |
-        if [ -d "CPSolver" ]; then
-          echo "cpsolver-found=true" >> $GITHUB_OUTPUT
-        else
-          echo "CPSolver directory not found. Please ensure the CPSolver module exists in the repository."
-          echo "cpsolver-found=false" >> $GITHUB_OUTPUT
-          exit 1
-        fi
-
-    - name: Build CPSolver Module
-      if: steps.check-cpsolver.outputs.cpsolver-found == 'true'
-      run: |
-        cd CPSolver
-        mvn clean install -DskipTests
+        echo '<settings><mirrors><mirror><id>unitime-repo</id><url>https://www.unitime.org/repo</url><mirrorOf>*</mirrorOf></mirror></mirrors></settings>' > ~/.m2/settings.xml
 
     - name: Build UniTime
       run: mvn clean install -DskipTests
