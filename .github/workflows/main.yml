@@ -1,0 +1,19 @@
+name: Build UniTime
+on: [push, workflow_dispatch]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 11
+      - name: Build with Ant
+        run: ant war
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: unitime-war
+          path: build/unitime.war
