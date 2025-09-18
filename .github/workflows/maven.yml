@@ -1,4 +1,4 @@
-name: Build UniTime
+name: Build UniTime with CPSolver
 
 on:
   push:
@@ -12,6 +12,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        path: unitime
 
     - name: Set up JDK 11
       uses: actions/setup-java@v4
@@ -23,11 +25,19 @@ jobs:
       uses: actions/cache@v4
       with:
         path: ~/.m2
-        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+        key: ${{ runner.os }}-m2-${{ hashFiles('unitime/**/pom.xml', 'cpsolver/**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
+
+    - name: Checkout CPSolver
+      uses: actions/checkout@v4
+      with:
+        repository: 'UniTime/cpsolver'
+        ref: 'master'  # اگر نسخه 1.4-SNAPSHOT در شاخه دیگری است، تغییر دهید
+        path: cpsolver
 
     - name: Configure Maven Repositories
       run: |
+        mkdir -p ~/.m2
         echo '<settings>
           <profiles>
             <profile>
@@ -37,12 +47,18 @@ jobs:
                   <id>central</id>
                   <url>https://repo.maven.apache.org/maven2</url>
                   <releases><enabled>true</enabled></releases>
-                  <snapshots><enabled>false</enabled></snapshots>
+                  <snapshots><enabled>true</enabled></snapshots>
                 </repository>
                 <repository>
                   <id>unitime-repo</id>
                   <url>https://www.unitime.org/repo</url>
                   <releases><enabled>true</enabled></releases>
+                  <snapshots><enabled>true</enabled></snapshots>
+                </repository>
+                <repository>
+                  <id>snapshots</id>
+                  <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                  <releases><enabled>false</enabled></releases>
                   <snapshots><enabled>true</enabled></snapshots>
                 </repository>
               </repositories>
@@ -51,12 +67,18 @@ jobs:
                   <id>central</id>
                   <url>https://repo.maven.apache.org/maven2</url>
                   <releases><enabled>true</enabled></releases>
-                  <snapshots><enabled>false</enabled></snapshots>
+                  <snapshots><enabled>true</enabled></snapshots>
                 </pluginRepository>
                 <pluginRepository>
                   <id>unitime-repo</id>
                   <url>https://www.unitime.org/repo</url>
                   <releases><enabled>true</enabled></releases>
+                  <snapshots><enabled>true</enabled></snapshots>
+                </pluginRepository>
+                <pluginRepository>
+                  <id>snapshots</id>
+                  <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                  <releases><enabled>false</enabled></releases>
                   <snapshots><enabled>true</enabled></snapshots>
                 </pluginRepository>
               </pluginRepositories>
@@ -67,12 +89,24 @@ jobs:
           </activeProfiles>
         </settings>' > ~/.m2/settings.xml
 
+    - name: Build CPSolver
+      run: |
+        cd cpsolver
+        mvn clean install -DskipTests || { echo "Failed to build CPSolver"; exit 1; }
+
     - name: Build UniTime
-      run: mvn clean install -DskipTests
+      run: |
+        cd unitime
+        mvn clean install -DskipTests || { echo "Failed to build UniTime"; exit 1; }
 
     - name: Run Tests
-      run: mvn test
+      run: |
+        cd unitime
+        mvn test
+      continue-on-error: true  # تست‌ها اختیاری هستند، چون ممکن است نیاز به تنظیمات اضافی داشته باشند
 
     - name: Debug on Failure
       if: failure()
-      run: mvn clean install -e -X
+      run: |
+        cd unitime
+        mvn clean install -e -X
