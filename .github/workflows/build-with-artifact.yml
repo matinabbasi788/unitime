@@ -1,0 +1,79 @@
+name: Build and Archive UniTime with Ant
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        path: unitime
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    - name: Install Ant
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y ant
+
+    - name: Build CPSolver with Ant (if exists)
+      run: |
+        cd unitime
+        if [ -d "CPSolver" ]; then
+          cd CPSolver
+          ant
+          cd ..
+        else
+          echo "CPSolver directory not found, skipping CPSolver build."
+        fi
+
+    - name: Build UniTime with Ant
+      run: |
+        cd unitime
+        ant
+
+    - name: Find Build Artifacts
+      run: |
+        cd unitime
+        echo "Listing all .war and .jar files:"
+        find . -name "*.war" -o -name "*.jar"
+        if [ -d "dist" ]; then
+          echo "Found dist directory"
+          zip -r unitime-build.zip dist
+        elif [ -d "build" ]; then
+          echo "Found build directory"
+          zip -r unitime-build.zip build
+        elif [ -d "target" ]; then
+          echo "Found target directory"
+          zip -r unitime-build.zip target
+        elif [ -n "$(find . -maxdepth 3 -name '*.war' -o -name '*.jar')" ]; then
+          echo "Found .war or .jar files"
+          zip -r unitime-build.zip $(find . -maxdepth 3 -name '*.war' -o -name '*.jar')
+        else
+          echo "No build artifacts found in dist, build, target, or as .war/.jar files"
+          exit 1
+        fi
+        mv unitime-build.zip ..
+
+    - name: Upload Build Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: unitime-build
+        path: unitime-build.zip
+        retention-days: 7
+
+    - name: Debug on Failure
+      if: failure()
+      run: |
+        cd unitime
+        ant -debug -verbose
