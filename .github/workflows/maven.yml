@@ -26,16 +26,22 @@ jobs:
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
 
-    - name: Build CPSolver Module
+    - name: Check for CPSolver Module
+      id: check-cpsolver
       run: |
         if [ -d "CPSolver" ]; then
-          cd CPSolver
-          mvn clean install -DskipTests
-          cd ..
+          echo "cpsolver-found=true" >> $GITHUB_OUTPUT
         else
-          echo "CPSolver directory not found, please check the repository structure."
+          echo "CPSolver directory not found. Please ensure the CPSolver module exists in the repository."
+          echo "cpsolver-found=false" >> $GITHUB_OUTPUT
           exit 1
         fi
+
+    - name: Build CPSolver Module
+      if: steps.check-cpsolver.outputs.cpsolver-found == 'true'
+      run: |
+        cd CPSolver
+        mvn clean install -DskipTests
 
     - name: Build UniTime
       run: mvn clean install -DskipTests
