@@ -26,9 +26,46 @@ jobs:
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
 
-    - name: Add UniTime Repository
+    - name: Configure Maven Repositories
       run: |
-        echo '<settings><mirrors><mirror><id>unitime-repo</id><url>https://www.unitime.org/repo</url><mirrorOf>*</mirrorOf></mirror></mirrors></settings>' > ~/.m2/settings.xml
+        echo '<settings>
+          <profiles>
+            <profile>
+              <id>unitime</id>
+              <repositories>
+                <repository>
+                  <id>central</id>
+                  <url>https://repo.maven.apache.org/maven2</url>
+                  <releases><enabled>true</enabled></releases>
+                  <snapshots><enabled>false</enabled></snapshots>
+                </repository>
+                <repository>
+                  <id>unitime-repo</id>
+                  <url>https://www.unitime.org/repo</url>
+                  <releases><enabled>true</enabled></releases>
+                  <snapshots><enabled>true</enabled></snapshots>
+                </repository>
+              </repositories>
+              <pluginRepositories>
+                <pluginRepository>
+                  <id>central</id>
+                  <url>https://repo.maven.apache.org/maven2</url>
+                  <releases><enabled>true</enabled></releases>
+                  <snapshots><enabled>false</enabled></snapshots>
+                </pluginRepository>
+                <pluginRepository>
+                  <id>unitime-repo</id>
+                  <url>https://www.unitime.org/repo</url>
+                  <releases><enabled>true</enabled></releases>
+                  <snapshots><enabled>true</enabled></snapshots>
+                </pluginRepository>
+              </pluginRepositories>
+            </profile>
+          </profiles>
+          <activeProfiles>
+            <activeProfile>unitime</activeProfile>
+          </activeProfiles>
+        </settings>' > ~/.m2/settings.xml
 
     - name: Build UniTime
       run: mvn clean install -DskipTests
