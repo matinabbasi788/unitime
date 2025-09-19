@@ -117,6 +117,9 @@
 		</s:if>
 	</div>
 </form>
+<p>ساخته شده با عشق</p>
+<%--
+
 	<s:if test="hasInitializationError">
 		<div class='unitime-InitializationError'>
 			<loc:message name="errorUniTimeFailedToStart"><%=Constants.getVersion()%></loc:message><br/>
@@ -137,6 +140,7 @@
 	<s:if test="externalFooter != null && !externalFooter.isEmpty()">
 		<s:include value="%{externalFooter}"/>
 	</s:if>
+--%>
 </body>
 </html>
 </loc:bundle>
