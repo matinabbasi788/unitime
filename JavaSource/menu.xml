@@ -20,358 +20,358 @@
  * 
  -->
 <unitime-menu>
-	<menu name="Courses" title="Course Timetabling">
-		<condition>
-			<or>
-				<propertyEquals name="tmtbl.menu.display_course_timetabling" value="true" defaultValue="true"/>
-				<hasPermission name="IsAdmin"/>
-			</or>
-			<or>
-				<hasPermission name="InstructionalOfferings"/>
-				<hasPermission name="Classes"/>
-				<hasPermission name="HQLReportsCourses"/>
-				<hasPermission name="ClassAssignments"/>
-				<hasPermission name="InstructorDetail"/>
-				<hasPermission name="InstructorSurvey" authority="session"/>
-			</or>
-		</condition>
-		<menu name="Input Data" title="Course Timetabling Input Data">
-			<item name="Instructional Offerings" page="instructionalOfferingSearch.action">
-				<condition>
-					<hasPermission name="InstructionalOfferings"/>
-				</condition>
-			</item>
-			<item name="Classes" page="classSearch.action">
-				<condition>
-					<hasPermission name="Classes"/>
-				</condition>
-			</item>
-			<separator/>
-			<menu name="Curricula" page="curricula" type="gwt">
-				<condition>
-					<hasPermission name="CurriculumView"/>
-				</condition>
-				<item name="Projection Rules" page="curprojrules" type="gwt">
-					<condition>
-						<hasPermission name="CurriculumProjectionRulesDetail"/>
-					</condition>
-				</item>
-			</menu>
-			<separator/>
-			<item name="Instructors" page="instructorSearch.action">
-				<condition>
-					<hasPermission name="Instructors"/>
-				</condition>
-			</item>
-			<item name="Instructor Attributes" page="instructorattributes" type="gwt">
-				<condition>
-					<hasPermission name="InstructorAttributes"/>
-				</condition>
-			</item>
-			<item name="Instructor Detail" page="instructorDetail.action">
-				<condition>
-					<hasPermission name="InstructorDetail"/>
-					<not>
-						<hasPermission name="Instructors"/>
-					</not>
-				</condition>
-			</item>
-			<item name="Instructor Survey" page="instructorSurvey" type="gwt">
-				<condition>
-					<hasPermission name="InstructorSurvey" authority="session"/>
-					<not>
-						<hasPermission name="Instructors"/>
-					</not>
-				</condition>
-			</item>
-			<separator/>
-			<menu name="Rooms" page="rooms" type="gwt">
-				<parameter name="mode">courses</parameter>
-				<condition>
-					<hasPermission name="Rooms"/>
-				</condition>
-				<item name="Room Features" page="roomfeatures" type="gwt">
-					<parameter name="mode">courses</parameter>
-					<condition>
-						<hasPermission name="RoomFeatures"/>
-					</condition>
-				</item>
-				<item name="Room Groups" page="roomgroups" type="gwt">
-					<parameter name="mode">courses</parameter>
-					<condition>
-						<hasPermission name="RoomGroups"/>
-					</condition>
-				</item>
-				<item name="Travel Times" page="traveltimes" type="gwt">
-					<condition>
-						<hasPermission name="TravelTimesLoad"/>
-					</condition>
-				</item>
-			</menu>
-			<separator/>
-			<item name="Distribution Preferences" page="distributionPrefs.action">
-				<condition>
-					<hasPermission name="DistributionPreferences"/>
-				</condition>
-			</item>
-			<item name="Reservations" page="reservations" type="gwt">
-				<condition>
-					<hasPermission name="Reservations"/>
-				</condition>
-			</item>
-			<item name="Class Assignments" page="classAssignmentsReportSearch.action">
-				<condition>
-					<hasPermission name="ClassAssignments"/>
-				</condition>
-			</item>
-		</menu>
-		<menu name="Course Timetabling" title="Course Timetabling Solver">
-			<condition>
-				<or>
-					<hasPermission name="CourseTimetabling"/>
-					<hasPermission name="Timetables"/>
-				</or>
-			</condition>
-			<item name="Saved Timetables" page="listSolutions" type="gwt">
-				<condition>
-					<hasPermission name="Timetables"/>
-				</condition>
-			</item>
-			<item name="Solver" page="solver" type="gwt">
-				<parameter name="type">course</parameter>
-				<condition>
-					<hasPermission name="Solver"/>
-				</condition>
-			</item>
-			<item name="Timetable Grid" page="timetableGrid" type="gwt">
-				<condition>
-					<hasPermission name="TimetableGrid"/>
-				</condition>
-			</item>
-			<separator/>
-			<item name="Assigned Classes" page="assignedClasses" type="gwt">
-				<condition>
-					<hasPermission name="AssignedClasses"/>
-				</condition>
-			</item>
-			<item name="Not-assigned Classes" page="notAssignedClasses" type="gwt">
-				<condition>
-					<hasPermission name="NotAssignedClasses"/>
-				</condition>
-			</item>
-			<item name="Changes" page="solutionChanges" type="gwt">
-				<condition>
-					<hasPermission name="SolutionChanges"/>
-				</condition>
-			</item>
-			<item name="History" page="assignmentHistory" type="gwt">
-				<condition>
-					<hasPermission name="AssignmentHistory"/>
-				</condition>
-			</item>
-			<item name="Conflict Statistics" page="cbs" type="gwt">
-				<condition>
-					<hasPermission name="ConflictStatistics"/>
-				</condition>
-			</item>
-			<item name="Solver Log" page="solverlog" type="gwt">
-				<parameter name="type">course</parameter>
-				<condition>
-					<hasPermission name="SolverLog"/>
-				</condition>
-			</item>
-			<item name="Reports" page="solutionReports" type="gwt">
-				<condition>
-					<hasPermission name="SolutionReports"/>
-				</condition>
-			</item>
-		</menu>
-		<menu name="Course Audit" title="Course Timetabling Audit">
-			<condition>
-				<hasPermission name="CourseTimetablingAudit"/>
-			</condition>
-			<item name="Solver" page="solver" type="gwt">
-				<parameter name="type">course</parameter>
-				<condition>
-					<hasPermission name="Solver"/>
-				</condition>
-			</item>
-			<item name="Conflict Statistics" page="cbs" type="gwt">
-				<condition>
-					<hasPermission name="ConflictStatistics"/>
-				</condition>
-			</item>
-			<item name="Solver Log" page="solverlog" type="gwt">
-				<parameter name="type">course</parameter>
-				<condition>
-					<hasPermission name="SolverLog"/>
-				</condition>
-			</item>
-			<item name="Reports" page="solutionReports" type="gwt">
-				<condition>
-					<hasPermission name="SolutionReports"/>
-				</condition>
-			</item>
-		</menu>
-		<menu name="Instructor Scheduling">
-			<condition>
-				<hasPermission name="InstructorSchedulingSolver"/>
-			</condition>
-			<item name="Instructor Scheduling Solver" page="solver" type="gwt">
-				<parameter name="type">instructor</parameter>
-			</item>
-			<item name="Solver Log" page="solverlog" type="gwt">
-				<parameter name="type">instructor</parameter>
-				<condition>
-					<hasPermission name="InstructorSchedulingSolverLog"/>
-				</condition>
-			</item>
-			<separator/>
-			<item name="Assigned Teaching Requests" page="teachingRequests" type="gwt">
-				<parameter name="assigned">true</parameter>
-			</item>
-			<item name="Not-Assigned Teaching Requests" page="teachingRequests" type="gwt">
-				<parameter name="assigned">false</parameter>
-			</item>
-			<item name="Teaching Assignments" page="teachingAssignments" type="gwt"/>
-			<item name="Assignment Changes" page="teachingAssignmentChanges" type="gwt"/>
-		</menu>
-		<item name="Reports" page="hql" type="gwt">
-			<parameter name="appearance">courses</parameter>
-			<condition>
-				<hasPermission name="HQLReportsCourses"/>
-			</condition>
-		</item>
-		<item name="Point In Time Data Reports" page="pointInTimeDataReports" type="gwt">
-			<condition>
-				<hasPermission name="PointInTimeDataReports"/>
-			</condition>
-		</item>
-	</menu>
-	<menu name="Curricula" title="Curriculum Timetabling">
-		<condition>
-			<or>
-				<propertyEquals name="tmtbl.menu.display_course_timetabling" value="true" defaultValue="true"/>
-				<hasPermission name="IsAdmin"/>
-			</or>
-			<hasPermission name="CurriculumView"/>
-			<not>
-				<hasPermission name="Classes"/>
-				<hasPermission name="InstructionalOfferings"/>
-			</not>
-		</condition>
-		<item name="Curricula" page="curricula" type="gwt">
-			<condition>
-				<hasPermission name="CurriculumView"/>
-			</condition>
-		</item>
-		<item name="Projection Rules" page="curprojrules" type="gwt">
-			<condition>
-				<hasPermission name="CurriculumProjectionRulesDetail"/>
-			</condition>
-		</item>
-	</menu>
-	<menu name="Students">
-		<condition>
-			<or>
-				<propertyEquals name="tmtbl.menu.display_student_sectioning" value="true" defaultValue="true"/>
-				<hasPermission name="IsAdmin"/>
-			</or>
-			<or>
-				<hasPermission name="StudentScheduling"/>
-				<hasPermission name="HQLReportsStudents"/>
-			</or>
-		</condition>
-		<menu name="Batch Solver" page="solver" type="gwt">
-			<parameter name="type">student</parameter>
-			<condition>
-				<hasPermission name="StudentSectioningSolver"/>
-			</condition>
-			<item name="Solver Log" page="solverlog" type="gwt">
-			<parameter name="type">student</parameter>
-				<condition>
-					<hasPermission name="StudentSectioningSolverLog"/>
-				</condition>
-			</item>
-			<item name="Solver Dashboard" page="batchsctdash" type="gwt">
-				<condition>
-					<hasPermission name="StudentSectioningSolverDashboard"/>
-				</condition>
-			</item>
-			<item name="Solver Reports" page="sctreport" type="gwt">
-				<condition>
-				    <hasPermission name="StudentSectioningSolver"/>
-				</condition>
-			</item>
-			<item name="Published Runs" page="publishedSolutions" type="gwt">
-				<condition>
-				    <hasPermission name="StudentSectioningSolverPublish"/>
-				</condition>
-			</item>
-		</menu>
-		<item name="Batch Scheduling Dashboard" page="batchsctdash" type="gwt">
-			<condition>
-			    <not>
-			        <hasPermission name="StudentSectioningSolver"/>
-			    </not>
-				<hasPermission name="StudentSectioningSolverDashboard"/>
-			</condition>
-		</item>
-		<item name="Batch Scheduling Reports" page="sctreport" type="gwt">
-			<condition>
-			    <not>
-			        <hasPermission name="StudentSectioningSolver"/>
-			    </not>
-				<hasPermission name="StudentSectioningSolverReports"/>
-			</condition>
-		</item>
-		<separator>
-			<condition>
-				<or>
-					<hasPermission name="SchedulingAssistant" authority="role"/>
-					<hasPermission name="CourseRequests" authority="role"/>
-					<hasPermission name="AdvisorCourseRequests" authority="role"/>
-				</or>
-			</condition>
-		</separator>
-		<item name="Scheduling Assistant" page="sectioning" type="gwt">
-			<condition>
-				<hasPermission name="SchedulingAssistant" authority="role"/>
-			</condition>
-		</item>
-		<item name="Online Scheduling Dashboard" page="onlinesctdash" type="gwt">
-			<condition>
-				<hasPermission name="SchedulingDashboard"/>
-			</condition>
-		</item>
-		<item name="Online Scheduling Reports" page="onlinereport" type="gwt">
-			<condition>
-				<hasPermission name="SchedulingReports"/>
-			</condition>
-		</item>
-		<item name="Course Requests" page="requests" type="gwt">
-			<condition>
-				<hasPermission name="CourseRequests" authority="role"/>
-			</condition>
-		</item>
-		<item name="Advisor Course Recommendations" page="acrf" type="gwt">
-			<condition>
-				<hasPermission name="AdvisorCourseRequests" authority="role"/>
-			</condition>
-		</item>
-		<separator/>
-		<item name="Enrollment Audits" page="enrollmentAuditPdfReport.action">
-			<condition>
-				<hasPermission name="EnrollmentAuditPDFReports"/>
-			</condition>
-		</item>
-		<item name="Reports" page="hql" type="gwt">
-			<parameter name="appearance">sectioning</parameter>
-			<condition>
-				<hasPermission name="HQLReportsStudents"/>
-			</condition>
-		</item>
-	</menu>
+	<!-- <menu name="Courses" title="Course Timetabling"> -->
+	<!-- 	<condition> -->
+	<!-- 		<or> -->
+	<!-- 			<propertyEquals name="tmtbl.menu.display_course_timetabling" value="true" defaultValue="true"/> -->
+	<!-- 			<hasPermission name="IsAdmin"/> -->
+	<!-- 		</or> -->
+	<!-- 		<or> -->
+	<!-- 			<hasPermission name="InstructionalOfferings"/> -->
+	<!-- 			<hasPermission name="Classes"/> -->
+	<!-- 			<hasPermission name="HQLReportsCourses"/> -->
+	<!-- 			<hasPermission name="ClassAssignments"/> -->
+	<!-- 			<hasPermission name="InstructorDetail"/> -->
+	<!-- 			<hasPermission name="InstructorSurvey" authority="session"/> -->
+	<!-- 		</or> -->
+	<!-- 	</condition> -->
+	<!-- 	<menu name="Input Data" title="Course Timetabling Input Data"> -->
+	<!-- 		<item name="Instructional Offerings" page="instructionalOfferingSearch.action"> -->
+	<!-- 			<condition> -->
+	<!-- 				<hasPermission name="InstructionalOfferings"/> -->
+	<!-- 			</condition> -->
+	<!-- 		</item> -->
+	<!-- 		<item name="Classes" page="classSearch.action"> -->
+	<!-- 			<condition> -->
+	<!-- 				<hasPermission name="Classes"/> -->
+	<!-- 			</condition> -->
+	<!-- 		</item> -->
+	<!-- 		<separator/> -->
+	<!-- 		<menu name="Curricula" page="curricula" type="gwt"> -->
+	<!-- 			<condition> -->
+	<!-- 				<hasPermission name="CurriculumView"/> -->
+	<!-- 			</condition> -->
+	<!-- 			<item name="Projection Rules" page="curprojrules" type="gwt"> -->
+	<!-- 				<condition> -->
+	<!-- 					<hasPermission name="CurriculumProjectionRulesDetail"/> -->
+	<!-- 				</condition> -->
+	<!-- 			</item> -->
+	<!-- 		</menu> -->
+	<!-- 		<separator/> -->
+	<!-- 		<item name="Instructors" page="instructorSearch.action"> -->
+	<!-- 			<condition> -->
+	<!-- 				<hasPermission name="Instructors"/> -->
+	<!-- 			</condition> -->
+	<!-- 		</item> -->
+	<!-- 		<item name="Instructor Attributes" page="instructorattributes" type="gwt"> -->
+	<!-- 			<condition> -->
+	<!-- 				<hasPermission name="InstructorAttributes"/> -->
+	<!-- 			</condition> -->
+	<!-- 		</item> -->
+	<!-- 		<item name="Instructor Detail" page="instructorDetail.action"> -->
+	<!-- 			<condition> -->
+	<!-- 				<hasPermission name="InstructorDetail"/> -->
+	<!-- 				<not> -->
+	<!-- 					<hasPermission name="Instructors"/> -->
+	<!-- 				</not> -->
+	<!-- 			</condition> -->
+	<!-- 		</item> -->
+	<!-- 		<item name="Instructor Survey" page="instructorSurvey" type="gwt"> -->
+	<!-- 			<condition> -->
+	<!-- 				<hasPermission name="InstructorSurvey" authority="session"/> -->
+	<!-- 				<not> -->
+	<!-- 					<hasPermission name="Instructors"/> -->
+	<!-- 				</not> -->
+	<!-- 			</condition> -->
+	<!-- 		</item> -->
+	<!-- 		<separator/> -->
+	<!-- 		<menu name="Rooms" page="rooms" type="gwt"> -->
+	<!-- 			<parameter name="mode">courses</parameter> -->
+	<!-- 			<condition> -->
+	<!-- 				<hasPermission name="Rooms"/> -->
+	<!-- 			</condition> -->
+	<!-- 			<item name="Room Features" page="roomfeatures" type="gwt"> -->
+	<!-- 				<parameter name="mode">courses</parameter> -->
+	<!-- 				<condition> -->
+	<!-- 					<hasPermission name="RoomFeatures"/> -->
+	<!-- 				</condition> -->
+	<!-- 			</item> -->
+	<!-- 			<item name="Room Groups" page="roomgroups" type="gwt"> -->
+	<!-- 				<parameter name="mode">courses</parameter> -->
+	<!-- 				<condition> -->
+	<!-- 					<hasPermission name="RoomGroups"/> -->
+	<!-- 				</condition> -->
+	<!-- 			</item> -->
+	<!-- 			<item name="Travel Times" page="traveltimes" type="gwt"> -->
+	<!-- 				<condition> -->
+	<!-- 					<hasPermission name="TravelTimesLoad"/> -->
+	<!-- 				</condition> -->
+	<!-- 			</item> -->
+	<!-- 		</menu> -->
+	<!-- 		<separator/> -->
+	<!-- 		<item name="Distribution Preferences" page="distributionPrefs.action"> -->
+	<!-- 			<condition> -->
+	<!-- 				<hasPermission name="DistributionPreferences"/> -->
+	<!-- 			</condition> -->
+	<!-- 		</item> -->
+	<!-- 		<item name="Reservations" page="reservations" type="gwt"> -->
+	<!-- 			<condition> -->
+	<!-- 				<hasPermission name="Reservations"/> -->
+	<!-- 			</condition> -->
+	<!-- 		</item> -->
+	<!-- 		<item name="Class Assignments" page="classAssignmentsReportSearch.action"> -->
+	<!-- 			<condition> -->
+	<!-- 				<hasPermission name="ClassAssignments"/> -->
+	<!-- 			</condition> -->
+	<!-- 		</item> -->
+	<!-- 	</menu> -->
+	<!-- 	<menu name="Course Timetabling" title="Course Timetabling Solver"> -->
+	<!-- 		<condition> -->
+	<!-- 			<or> -->
+	<!-- 				<hasPermission name="CourseTimetabling"/> -->
+	<!-- 				<hasPermission name="Timetables"/> -->
+	<!-- 			</or> -->
+	<!-- 		</condition> -->
+	<!-- 		<item name="Saved Timetables" page="listSolutions" type="gwt"> -->
+	<!-- 			<condition> -->
+	<!-- 				<hasPermission name="Timetables"/> -->
+	<!-- 			</condition> -->
+	<!-- 		</item> -->
+	<!-- 		<item name="Solver" page="solver" type="gwt"> -->
+	<!-- 			<parameter name="type">course</parameter> -->
+	<!-- 			<condition> -->
+	<!-- 				<hasPermission name="Solver"/> -->
+	<!-- 			</condition> -->
+	<!-- 		</item> -->
+	<!-- 		<item name="Timetable Grid" page="timetableGrid" type="gwt"> -->
+	<!-- 			<condition> -->
+	<!-- 				<hasPermission name="TimetableGrid"/> -->
+	<!-- 			</condition> -->
+	<!-- 		</item> -->
+	<!-- 		<separator/> -->
+	<!-- 		<item name="Assigned Classes" page="assignedClasses" type="gwt"> -->
+	<!-- 			<condition> -->
+	<!-- 				<hasPermission name="AssignedClasses"/> -->
+	<!-- 			</condition> -->
+	<!-- 		</item> -->
+	<!-- 		<item name="Not-assigned Classes" page="notAssignedClasses" type="gwt"> -->
+	<!-- 			<condition> -->
+	<!-- 				<hasPermission name="NotAssignedClasses"/> -->
+	<!-- 			</condition> -->
+	<!-- 		</item> -->
+	<!-- 		<item name="Changes" page="solutionChanges" type="gwt"> -->
+	<!-- 			<condition> -->
+	<!-- 				<hasPermission name="SolutionChanges"/> -->
+	<!-- 			</condition> -->
+	<!-- 		</item> -->
+	<!-- 		<item name="History" page="assignmentHistory" type="gwt"> -->
+	<!-- 			<condition> -->
+	<!-- 				<hasPermission name="AssignmentHistory"/> -->
+	<!-- 			</condition> -->
+	<!-- 		</item> -->
+	<!-- 		<item name="Conflict Statistics" page="cbs" type="gwt"> -->
+	<!-- 			<condition> -->
+	<!-- 				<hasPermission name="ConflictStatistics"/> -->
+	<!-- 			</condition> -->
+	<!-- 		</item> -->
+	<!-- 		<item name="Solver Log" page="solverlog" type="gwt"> -->
+	<!-- 			<parameter name="type">course</parameter> -->
+	<!-- 			<condition> -->
+	<!-- 				<hasPermission name="SolverLog"/> -->
+	<!-- 			</condition> -->
+	<!-- 		</item> -->
+	<!-- 		<item name="Reports" page="solutionReports" type="gwt"> -->
+	<!-- 			<condition> -->
+	<!-- 				<hasPermission name="SolutionReports"/> -->
+	<!-- 			</condition> -->
+	<!-- 		</item> -->
+	<!-- 	</menu> -->
+	<!-- 	<menu name="Course Audit" title="Course Timetabling Audit"> -->
+	<!-- 		<condition> -->
+	<!-- 			<hasPermission name="CourseTimetablingAudit"/> -->
+	<!-- 		</condition> -->
+	<!-- 		<item name="Solver" page="solver" type="gwt"> -->
+	<!-- 			<parameter name="type">course</parameter> -->
+	<!-- 			<condition> -->
+	<!-- 				<hasPermission name="Solver"/> -->
+	<!-- 			</condition> -->
+	<!-- 		</item> -->
+	<!-- 		<item name="Conflict Statistics" page="cbs" type="gwt"> -->
+	<!-- 			<condition> -->
+	<!-- 				<hasPermission name="ConflictStatistics"/> -->
+	<!-- 			</condition> -->
+	<!-- 		</item> -->
+	<!-- 		<item name="Solver Log" page="solverlog" type="gwt"> -->
+	<!-- 			<parameter name="type">course</parameter> -->
+	<!-- 			<condition> -->
+	<!-- 				<hasPermission name="SolverLog"/> -->
+	<!-- 			</condition> -->
+	<!-- 		</item> -->
+	<!-- 		<item name="Reports" page="solutionReports" type="gwt"> -->
+	<!-- 			<condition> -->
+	<!-- 				<hasPermission name="SolutionReports"/> -->
+	<!-- 			</condition> -->
+	<!-- 		</item> -->
+	<!-- 	</menu> -->
+	<!-- 	<menu name="Instructor Scheduling"> -->
+	<!-- 		<condition> -->
+	<!-- 			<hasPermission name="InstructorSchedulingSolver"/> -->
+	<!-- 		</condition> -->
+	<!-- 		<item name="Instructor Scheduling Solver" page="solver" type="gwt"> -->
+	<!-- 			<parameter name="type">instructor</parameter> -->
+	<!-- 		</item> -->
+	<!-- 		<item name="Solver Log" page="solverlog" type="gwt"> -->
+	<!-- 			<parameter name="type">instructor</parameter> -->
+	<!-- 			<condition> -->
+	<!-- 				<hasPermission name="InstructorSchedulingSolverLog"/> -->
+	<!-- 			</condition> -->
+	<!-- 		</item> -->
+	<!-- 		<separator/> -->
+	<!-- 		<item name="Assigned Teaching Requests" page="teachingRequests" type="gwt"> -->
+	<!-- 			<parameter name="assigned">true</parameter> -->
+	<!-- 		</item> -->
+	<!-- 		<item name="Not-Assigned Teaching Requests" page="teachingRequests" type="gwt"> -->
+	<!-- 			<parameter name="assigned">false</parameter> -->
+	<!-- 		</item> -->
+	<!-- 		<item name="Teaching Assignments" page="teachingAssignments" type="gwt"/> -->
+	<!-- 		<item name="Assignment Changes" page="teachingAssignmentChanges" type="gwt"/> -->
+	<!-- 	</menu> -->
+	<!-- 	<item name="Reports" page="hql" type="gwt"> -->
+	<!-- 		<parameter name="appearance">courses</parameter> -->
+	<!-- 		<condition> -->
+	<!-- 			<hasPermission name="HQLReportsCourses"/> -->
+	<!-- 		</condition> -->
+	<!-- 	</item> -->
+	<!-- 	<item name="Point In Time Data Reports" page="pointInTimeDataReports" type="gwt"> -->
+	<!-- 		<condition> -->
+	<!-- 			<hasPermission name="PointInTimeDataReports"/> -->
+	<!-- 		</condition> -->
+	<!-- 	</item> -->
+	<!-- </menu> -->
+	<!-- <menu name="Curricula" title="Curriculum Timetabling"> -->
+	<!-- 	<condition> -->
+	<!-- 		<or> -->
+	<!-- 			<propertyEquals name="tmtbl.menu.display_course_timetabling" value="true" defaultValue="true"/> -->
+	<!-- 			<hasPermission name="IsAdmin"/> -->
+	<!-- 		</or> -->
+	<!-- 		<hasPermission name="CurriculumView"/> -->
+	<!-- 		<not> -->
+	<!-- 			<hasPermission name="Classes"/> -->
+	<!-- 			<hasPermission name="InstructionalOfferings"/> -->
+	<!-- 		</not> -->
+	<!-- 	</condition> -->
+	<!-- 	<item name="Curricula" page="curricula" type="gwt"> -->
+	<!-- 		<condition> -->
+	<!-- 			<hasPermission name="CurriculumView"/> -->
+	<!-- 		</condition> -->
+	<!-- 	</item> -->
+	<!-- 	<item name="Projection Rules" page="curprojrules" type="gwt"> -->
+	<!-- 		<condition> -->
+	<!-- 			<hasPermission name="CurriculumProjectionRulesDetail"/> -->
+	<!-- 		</condition> -->
+	<!-- 	</item> -->
+	<!-- </menu> -->
+	<!-- <menu name="Students"> -->
+	<!-- 	<condition> -->
+	<!-- 		<or> -->
+	<!-- 			<propertyEquals name="tmtbl.menu.display_student_sectioning" value="true" defaultValue="true"/> -->
+	<!-- 			<hasPermission name="IsAdmin"/> -->
+	<!-- 		</or> -->
+	<!-- 		<or> -->
+	<!-- 			<hasPermission name="StudentScheduling"/> -->
+	<!-- 			<hasPermission name="HQLReportsStudents"/> -->
+	<!-- 		</or> -->
+	<!-- 	</condition> -->
+	<!-- 	<menu name="Batch Solver" page="solver" type="gwt"> -->
+	<!-- 		<parameter name="type">student</parameter> -->
+	<!-- 		<condition> -->
+	<!-- 			<hasPermission name="StudentSectioningSolver"/> -->
+	<!-- 		</condition> -->
+	<!-- 		<item name="Solver Log" page="solverlog" type="gwt"> -->
+	<!-- 		<parameter name="type">student</parameter> -->
+	<!-- 			<condition> -->
+	<!-- 				<hasPermission name="StudentSectioningSolverLog"/> -->
+	<!-- 			</condition> -->
+	<!-- 		</item> -->
+	<!-- 		<item name="Solver Dashboard" page="batchsctdash" type="gwt"> -->
+	<!-- 			<condition> -->
+	<!-- 				<hasPermission name="StudentSectioningSolverDashboard"/> -->
+	<!-- 			</condition> -->
+	<!-- 		</item> -->
+	<!-- 		<item name="Solver Reports" page="sctreport" type="gwt"> -->
+	<!-- 			<condition> -->
+	<!-- 			    <hasPermission name="StudentSectioningSolver"/> -->
+	<!-- 			</condition> -->
+	<!-- 		</item> -->
+	<!-- 		<item name="Published Runs" page="publishedSolutions" type="gwt"> -->
+	<!-- 			<condition> -->
+	<!-- 			    <hasPermission name="StudentSectioningSolverPublish"/> -->
+	<!-- 			</condition> -->
+	<!-- 		</item> -->
+	<!-- 	</menu> -->
+	<!-- 	<item name="Batch Scheduling Dashboard" page="batchsctdash" type="gwt"> -->
+	<!-- 		<condition> -->
+	<!-- 		    <not> -->
+	<!-- 		        <hasPermission name="StudentSectioningSolver"/> -->
+	<!-- 		    </not> -->
+	<!-- 			<hasPermission name="StudentSectioningSolverDashboard"/> -->
+	<!-- 		</condition> -->
+	<!-- 	</item> -->
+	<!-- 	<item name="Batch Scheduling Reports" page="sctreport" type="gwt"> -->
+	<!-- 		<condition> -->
+	<!-- 		    <not> -->
+	<!-- 		        <hasPermission name="StudentSectioningSolver"/> -->
+	<!-- 		    </not> -->
+	<!-- 			<hasPermission name="StudentSectioningSolverReports"/> -->
+	<!-- 		</condition> -->
+	<!-- 	</item> -->
+	<!-- 	<separator> -->
+	<!-- 		<condition> -->
+	<!-- 			<or> -->
+	<!-- 				<hasPermission name="SchedulingAssistant" authority="role"/> -->
+	<!-- 				<hasPermission name="CourseRequests" authority="role"/> -->
+	<!-- 				<hasPermission name="AdvisorCourseRequests" authority="role"/> -->
+	<!-- 			</or> -->
+	<!-- 		</condition> -->
+	<!-- 	</separator> -->
+	<!-- 	<item name="Scheduling Assistant" page="sectioning" type="gwt"> -->
+	<!-- 		<condition> -->
+	<!-- 			<hasPermission name="SchedulingAssistant" authority="role"/> -->
+	<!-- 		</condition> -->
+	<!-- 	</item> -->
+	<!-- 	<item name="Online Scheduling Dashboard" page="onlinesctdash" type="gwt"> -->
+	<!-- 		<condition> -->
+	<!-- 			<hasPermission name="SchedulingDashboard"/> -->
+	<!-- 		</condition> -->
+	<!-- 	</item> -->
+	<!-- 	<item name="Online Scheduling Reports" page="onlinereport" type="gwt"> -->
+	<!-- 		<condition> -->
+	<!-- 			<hasPermission name="SchedulingReports"/> -->
+	<!-- 		</condition> -->
+	<!-- 	</item> -->
+	<!-- 	<item name="Course Requests" page="requests" type="gwt"> -->
+	<!-- 		<condition> -->
+	<!-- 			<hasPermission name="CourseRequests" authority="role"/> -->
+	<!-- 		</condition> -->
+	<!-- 	</item> -->
+	<!-- 	<item name="Advisor Course Recommendations" page="acrf" type="gwt"> -->
+	<!-- 		<condition> -->
+	<!-- 			<hasPermission name="AdvisorCourseRequests" authority="role"/> -->
+	<!-- 		</condition> -->
+	<!-- 	</item> -->
+	<!-- 	<separator/> -->
+	<!-- 	<item name="Enrollment Audits" page="enrollmentAuditPdfReport.action"> -->
+	<!-- 		<condition> -->
+	<!-- 			<hasPermission name="EnrollmentAuditPDFReports"/> -->
+	<!-- 		</condition> -->
+	<!-- 	</item> -->
+	<!-- 	<item name="Reports" page="hql" type="gwt"> -->
+	<!-- 		<parameter name="appearance">sectioning</parameter> -->
+	<!-- 		<condition> -->
+	<!-- 			<hasPermission name="HQLReportsStudents"/> -->
+	<!-- 		</condition> -->
+	<!-- 	</item> -->
+	<!-- </menu> -->
 	<menu name="Examinations">
 		<condition>
 			<or>
