@@ -117,7 +117,6 @@
 		</s:if>
 	</div>
 </form>
-<p>ساخته شده با عشق</p>
 <%--
 
 	<s:if test="hasInitializationError">

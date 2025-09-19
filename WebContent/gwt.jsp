@@ -130,16 +130,20 @@
 			<span id="UniTimeGWT:Loading" class="unitime-PageLoading"><loc:message name="messagePageLoading"/></span>
 	    	<span id='UniTimeGWT:Body'></span>
 	    </span>
-    </span><span class='footer' id="unitime-Footer">
+    </span>
+<%-- 
+    <span class='footer' id="unitime-Footer">
 		<span class="unitime-Footer">
 			<span class="row">
 				<span class="cell left">
 					<span id='UniTimeGWT:Version'></span>
 				</span>
     			<%-- WARNING: Changing or removing the copyright notice will violate the license terms. If you need a different licensing, please contact us at support@unitime.org --%>
+<%--
 				<span class="cell middle"><tt:copy/></span>
 				<span class="cell right"><tt:registration/></span>
 			</span>
+      --%>
 		</span>
 		<tt:hasProperty name="tmtbl.page.disclaimer">
 			<span class='unitime-Disclaimer'><tt:property name="tmtbl.page.disclaimer"/></span>
