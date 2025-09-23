@@ -93,6 +93,11 @@
 	</scm>
 
 	<dependencies>
+    <dependency>
+  <groupId>com.github.mfathi91</groupId>
+  <artifactId>persian-date-time</artifactId>
+  <version>4.2.1</version>
+  </dependency>
 		<dependency>
 			<groupId>org.unitime</groupId>
 			<artifactId>cpsolver</artifactId>
