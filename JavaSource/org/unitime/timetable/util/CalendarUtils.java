@@ -17,74 +17,81 @@
  * limitations under the License.
  * 
 */
+/*
+ * CalendarUtils - نسخه جلالی
+ */
 package org.unitime.timetable.util;
 
-import java.util.Calendar;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
-import java.util.Locale;
 
-/**
- * @author Heston Fernandes, Tomas Muller
- */
+import com.github.mfathi91.time.PersianDate;
+
 public class CalendarUtils {
 
-	/**
-	 * Check if a string is a valid date
-	 * @param date String to be checked
-	 * @param dateFormat format of the date e.g. MM/dd/yyyy - see SimpleDateFormat
-	 * @return true if it is a valid date
-	 * Use {@link Formats.Format.isValid(boolean)} instead.
-	 */
-	@Deprecated
-	public static boolean isValidDate(String date, String dateFormat) {
-		return Formats.getDateFormat(dateFormat).isValid(date);
-	}
-	
-	/**
-	 * Parse a string to give a Date object
-	 * @param date
-	 * @param dateFormat format of the date e.g. MM/dd/yyyy - see SimpleDateFormat
-	 * @return null if not a valid date
-	 * Use {@link Formats.Format.parse(String)} instead.
-	 */
-	public static Date getDate(String date, String dateFormat) {
-		try {
-			return Formats.getDateFormat(dateFormat).parse(date);
-		} catch (Exception e) {
-			return null;
-		}
-	}
-	
-	public static int date2dayOfYear(int sessionYear, Date meetingDate) {
-		Calendar c = Calendar.getInstance(Locale.US);
-		c.setTime(meetingDate);
-		int dayOfYear = c.get(Calendar.DAY_OF_YEAR);
-		if (c.get(Calendar.YEAR) < sessionYear) {
-			Calendar x = Calendar.getInstance(Locale.US);
-		    x.set(c.get(Calendar.YEAR),11,31,0,0,0);
-		    x.clear(Calendar.MILLISECOND);
-		    dayOfYear -= x.get(Calendar.DAY_OF_YEAR);
-		} else if (c.get(Calendar.YEAR) > sessionYear) {
-			Calendar x = Calendar.getInstance(Locale.US);
-		    x.set(sessionYear,11,31,0,0,0);
-		    x.clear(Calendar.MILLISECOND);
-		    dayOfYear += x.get(Calendar.DAY_OF_YEAR);
-		}
-		return dayOfYear;
-	}
-	
-	public static Date dateOfYear2date(int sessionYear, int dayOfYear) {
-		Calendar c = Calendar.getInstance(Locale.US);
-		c.set(sessionYear, 11, 31, 0, 0, 0);
-		c.clear(Calendar.MILLISECOND);
-		if (dayOfYear <= 0) {
-			c.set(Calendar.YEAR, sessionYear - 1);
-			dayOfYear += c.get(Calendar.DAY_OF_YEAR);
-		} else if (dayOfYear > c.get(Calendar.DAY_OF_YEAR)) {
-			dayOfYear -= c.get(Calendar.DAY_OF_YEAR);
-			c.set(Calendar.YEAR, sessionYear + 1);
-		}
-		c.set(Calendar.DAY_OF_YEAR, dayOfYear);
-		return c.getTime();
-	}
+    /**
+     * چک می‌کنه که رشته‌ی ورودی تاریخ جلالی معتبر هست یا نه
+     * فرمت: yyyy/MM/dd
+     */
+    public static boolean isValidDate(String date) {
+        try {
+            String[] parts = date.split("/");
+            if (parts.length != 3) return false;
+            int year = Integer.parseInt(parts[0]);
+            int month = Integer.parseInt(parts[1]);
+            int day = Integer.parseInt(parts[2]);
+            PersianDate.of(year, month, day); // اگر تاریخ نامعتبر باشه exception میده
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
+     * تبدیل رشته‌ی تاریخ (yyyy/MM/dd) به Date
+     */
+    public static Date getDate(String date) {
+        try {
+            String[] parts = date.split("/");
+            int year = Integer.parseInt(parts[0]);
+            int month = Integer.parseInt(parts[1]);
+            int day = Integer.parseInt(parts[2]);
+
+            PersianDate persianDate = PersianDate.of(year, month, day);
+            LocalDate gregorian = persianDate.toGregorian();
+            return Date.from(gregorian.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * محاسبه روز سال جلالی برای یک تاریخ
+     */
+    public static int date2dayOfYear(int sessionYear, Date meetingDate) {
+        LocalDate gDate = meetingDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        PersianDate persianDate = PersianDate.fromGregorian(gDate);
+
+        int dayOfYear = persianDate.getDayOfYear();
+
+        if (persianDate.getYear() < sessionYear) {
+            PersianDate endPrevYear = PersianDate.of(persianDate.getYear(), 12, 29);
+            dayOfYear -= endPrevYear.getDayOfYear();
+        } else if (persianDate.getYear() > sessionYear) {
+            PersianDate endCurrYear = PersianDate.of(sessionYear, 12, 29);
+            dayOfYear += endCurrYear.getDayOfYear();
+        }
+        return dayOfYear;
+    }
+
+    /**
+     * برگردوندن تاریخ از روی سال و روز سال (جلالی)
+     */
+    public static Date dateOfYear2date(int sessionYear, int dayOfYear) {
+        PersianDate persianDate = PersianDate.ofYearDay(sessionYear, dayOfYear);
+        LocalDate gregorian = persianDate.toGregorian();
+        return Date.from(gregorian.atStartOfDay(ZoneId.systemDefault()).toInstant());
+    }
 }
+

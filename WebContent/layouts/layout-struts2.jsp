@@ -179,7 +179,9 @@
 	    		<tiles:insertAttribute name="body"/>
         	</span>
         </span>
-    </span><span class='footer' id="unitime-Footer">
+    </span>
+  <%--
+    <span class='footer' id="unitime-Footer">
 		<span class="unitime-Footer">
 			<span class="row">
 				<span class="cell left">
@@ -190,6 +192,7 @@
 					</s:if>
 				</span>
     			<%-- WARNING: Changing or removing the copyright notice will violate the license terms. If you need a different licensing, please contact us at support@unitime.org --%>
+  <%--
 				<span class="cell middle"><tt:copy/></span>
 				<tiles:importAttribute name="updateRegistration" scope="request"/>
 				<s:if test="#request.updateRegistration">
@@ -199,6 +202,7 @@
 					<span class="cell right"><tt:registration/></span>
 				</s:else>
 			</span>
+      --%>
 		</span>
 		<tt:hasProperty name="tmtbl.page.disclaimer">
 			<span class='unitime-Disclaimer'><tt:property name="tmtbl.page.disclaimer"/></span>
