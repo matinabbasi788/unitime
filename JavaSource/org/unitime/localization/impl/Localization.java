@@ -45,6 +45,10 @@ import org.unitime.timetable.util.Formats;
 import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.i18n.client.Messages;
 
+// اضافه برای جلالی
+import com.ibm.icu.text.SimpleDateFormat as ICUSimpleDateFormat;
+import com.ibm.icu.util.ULocale;
+
 /**
  * @author Tomas Muller
  */
@@ -84,7 +88,14 @@ public class Localization {
 	
 	public static Locale getJavaLocale() { return sJavaLocale.get(); }
 	
-	public static DateFormat getDateFormat(String pattern) { return new SimpleDateFormat(pattern, getJavaLocale()); }
+	// تغییر داده شده برای پشتیبانی جلالی
+	public static DateFormat getDateFormat(String pattern) { 
+		if ("fa".equalsIgnoreCase(getJavaLocale().getLanguage())) {
+			ULocale persian = new ULocale("fa_IR@calendar=persian");
+			return new ICUSimpleDateFormat(pattern, persian);
+		}
+		return new SimpleDateFormat(pattern, getJavaLocale()); 
+	}
 	
 	public static NumberFormat getNumberFormat(String pattern) { return new DecimalFormat(pattern, new DecimalFormatSymbols(getJavaLocale())); }
 	
@@ -294,3 +305,4 @@ public class Localization {
 		}
 	}
 }
+
