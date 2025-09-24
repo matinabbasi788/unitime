@@ -101,6 +101,181 @@
 				<s:fielderror fieldName="form.isDefault"/>
 			</TD>
 		</TR>
+
+		<!-- جدول اصلی الگوهای تاریخ -->
+		<TR id="__patternTable">
+			<TD colspan='2'>
+				<s:property value="#request.pattern" escapeHtml="false" cssClass="date-pattern"/>
+			</TD>
+		</TR>
+
+	</table>
+
+	<BR>
+</s:if>
+
+<s:else>
+<table class="unitime-MainTable">
+	<TR>
+		<TD colspan='6'>
+			<tt:section-header>
+				<tt:section-title><loc:message name="sectDatePatterns"/></tt:section-title>
+				<s:submit name='op' value='%{#msg.actionAddDatePattern()}' title='%{#msg.titleAddDatePattern()}'/>
+			</tt:section-header>
+		</TD>
+	</TR>
+	<s:property value="#request.table" escapeHtml="false"/>
+</table>
+</s:else>
+
+<script>
+function hideParentsIfNeeded() {
+	var type = document.getElementById('__type');
+	if (type == null) return;
+	var selected = type.selectedIndex >= 0 && type.options[type.selectedIndex].value == 'PatternSet';
+	var parents = document.getElementById('__parents');
+	if (parents != null) parents.style.display = ( selected ? 'none' : 'table-row');
+	var children = document.getElementById('__children');
+	if (children != null) children.style.display = ( selected ? 'table-row' : 'none');
+	var pattern = document.getElementById('__pattern');
+	if (pattern != null) pattern.style.display = ( selected ? 'none' : 'table-row');
+	var patternTable = document.getElementById('__patternTable');
+	if (patternTable != null) patternTable.style.display = ( selected ? 'none' : 'table-row');
+	var showDepts = type.selectedIndex >= 0 && (type.options[type.selectedIndex].value == 'PatternSet' || type.options[type.selectedIndex].value == 'Extended');
+	var departments = document.getElementById('__departments');
+	if (departments != null) departments.style.display = (showDepts ? 'table-row' : 'none');
+}
+hideParentsIfNeeded();
+</script>
+
+<!-- افزودن کتابخانه jalaali-js -->
+<script src="https://cdn.jsdelivr.net/npm/jalaali-js@1.1.3/dist/jalaali.min.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // همه سلول‌های تاریخ در جدول
+    const dateCells = document.querySelectorAll(".date-pattern td");
+
+    dateCells.forEach(cell => {
+        const text = cell.textContent.trim();
+        
+        // فرض می‌کنیم فرمت تاریخ YYYY-MM-DD باشد
+        const parts = text.split("-");
+        if(parts.length === 3){
+            const gy = parseInt(parts[0], 10);
+            const gm = parseInt(parts[1], 10);
+            const gd = parseInt(parts[2], 10);
+
+            // تبدیل به جلالی
+            const jDate = Jalaali.toJalaali({gy: gy, gm: gm, gd: gd});
+            cell.textContent = `${jDate.jy}-${String(jDate.jm).padStart(2,'0')}-${String(jDate.jd).padStart(2,'0')}`;
+        }
+    });
+});
+</script>
+<%-- 
+ * Licensed to The Apereo Foundation under one or more contributor license
+ * agreements. See the NOTICE file distributed with this work for
+ * additional information regarding copyright ownership.
+ *
+ * The Apereo Foundation licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at:
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * 
+ --%>
+<%@ taglib prefix="s" uri="/struts-tags" %>
+<%@ taglib prefix="tt" uri="http://www.unitime.org/tags-custom" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="loc" uri="http://www.unitime.org/tags-localization" %>
+<loc:bundle name="CourseMessages"><s:set var="msg" value="#attr.MSG"/>
+<tt:confirm name="confirmDelete"><loc:message name="confirmDeleteDatePattern"/></tt:confirm>
+<tt:confirm name="confirmMakeDefault"><loc:message name="confirmDefaultDatePatternChange"/></tt:confirm>
+<s:form action="datePatternEdit">
+<s:hidden name="form.uniqueId"/><s:fielderror fieldName="form.uniqueId"/>
+<s:if test="form.op != 'List'">
+	<s:hidden name="form.isUsed"/>
+	<s:hidden name="form.sessionId"/>
+	<s:hidden name="form.nextId"/>
+	<s:hidden name="form.previousId"/>
+	<table class="unitime-MainTable">
+		<TR>
+			<TD colspan="2">
+				<tt:section-header>
+					<tt:section-title>
+						<s:if test="form.op == #msg.actionSaveDatePattern()">
+							<loc:message name="sectAddDatePattern"/>
+						</s:if><s:else>
+							<loc:message name="sectEditDatePattern"/>
+						</s:else>
+					</tt:section-title>
+					<s:submit name='op' value='%{form.op}'/>
+					<s:if test="form.hasPrevious == true">
+						<s:submit name='op' value='%{#msg.actionPreviousDatePattern()}'/>
+					</s:if>
+					<s:if test="form.hasNext == true">
+						<s:submit name='op' value='%{#msg.actionNextDatePattern()}'/>
+					</s:if>
+					<s:if test="form.op == #msg.actionUpdateDatePattern() && form.isUsed == false && form.isDefault == false">
+						<s:submit name='op' value='%{#msg.actionDeleteDatePattern()}' onclick="return confirmDelete();"/>
+					</s:if>
+					<s:if test="form.isDefault == false && form.typeInt <= 2 && showMakeDefault == true">
+						<s:submit name='op' value='%{#msg.actionMakeDatePatternDefaulf()}' onclick="return confirmMakeDefault();"/>
+					</s:if>
+					<s:submit name='op' value='%{#msg.actionBackToDatePatterns()}'/>
+				</tt:section-header>
+			</TD>
+		</TR>
+
+		<TR>
+			<TD><loc:message name="propDatePatternName"/></TD>
+			<TD>
+				<s:textfield name="form.name" size="50" maxlength="100"/>
+				<s:fielderror fieldName="form.name"/>
+			</TD>
+		</TR>
+
+		<TR>
+			<TD><loc:message name="propDatePatternType"/></TD>
+			<TD>
+				<s:select name="form.type" id="__type" onchange="hideParentsIfNeeded();"
+					list="form.types" listKey="value" listValue="label"/>
+				<s:fielderror fieldName="form.type"/>
+			</TD>
+		</TR>
+		
+		<TR>
+			<TD><loc:message name="propDatePatternNbrWeeks"/></TD>
+			<TD>
+				<s:textfield name="form.numberOfWeeks" size="10" maxlength="10"/>
+				<s:fielderror fieldName="form.numberOfWeeks"/>
+				<i><loc:message name="infoDatePatternNbrWeeks"/></i>
+			</TD>
+		</TR>
+
+		<TR>
+			<TD><loc:message name="propDatePatternVisible"/></TD>
+			<TD>
+				<s:checkbox name="form.visible"/>
+				<s:fielderror fieldName="form.visible"/>
+			</TD>
+		</TR>
+
+		<TR>
+			<TD><loc:message name="propDatePatternDefault"/></TD>
+			<TD>
+				<s:checkbox name="form.isDefault" disabled="true"/>
+				<s:fielderror fieldName="form.isDefault"/>
+			</TD>
+		</TR>
 		
 		<TR id="__departments">
 			<TD valign="top"><loc:message name="propDatePatternDepartments"/></TD>
@@ -270,3 +445,4 @@ hideParentsIfNeeded();
 </script>
 </s:form>
 </loc:bundle>
+
