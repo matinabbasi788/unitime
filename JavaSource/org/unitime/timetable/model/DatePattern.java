@@ -71,46 +71,6 @@ public class DatePattern extends BaseDatePattern implements Comparable<DatePatte
 	private static final long serialVersionUID = 1L;
 	protected static CourseMessages MSG = Localization.create(CourseMessages.class);
 	protected static GwtConstants CONS = Localization.create(GwtConstants.class);
-
-	// [JALALI DISPLAY] --------------------------------------------------------
-	// مقادیر و توابع کمکی صرفاً برای نمایش شمسی (هیچ تغییری در محاسبات/ذخیره‌سازی نمی‌دهند)
-	private static final String[] FA_WEEKDAYS = {
-		"دوشنبه","سه\u200Cشنبه","چهارشنبه","پنجشنبه","جمعه","شنبه","یکشنبه"
-	};
-	private static final String[] FA_MONTHS = {
-		"فروردین","اردیبهشت","خرداد","تیر","مرداد","شهریور",
-		"مهر","آبان","آذر","دی","بهمن","اسفند"
-	};
-	private static String toPersianDigits(String s) {
-		return s.replace('0','۰').replace('1','۱').replace('2','۲').replace('3','۳').replace('4','۴')
-				.replace('5','۵').replace('6','۶').replace('7','۷').replace('8','۸').replace('9','۹');
-	}
-	/** تبدیل تاریخ میلادی Calendar به جلالی (نمایش) */
-	private static int[] gregorianToJalali(java.util.Calendar gc) {
-		int gy = gc.get(java.util.Calendar.YEAR);
-		int gm = gc.get(java.util.Calendar.MONTH) + 1; // 1..12
-		int gd = gc.get(java.util.Calendar.DAY_OF_MONTH);
-		int[] g_d_m = {0,31, (gy%4==0 && gy%100!=0) || (gy%400==0) ? 29:28,31,30,31,30,31,31,30,31,30,31};
-		int gy2 = (gm > 2) ? (gy + 1) : gy;
-		long days = 355666L + (365L*gy) + ((gy2 + 3)/4) - ((gy2 + 99)/100) + ((gy2 + 399)/400) + gd;
-		for (int i=1; i<gm; ++i) days += g_d_m[i];
-		long jy = -1595 + 33*(days/12053); days %= 12053;
-		jy += 4*(days/1461); days %= 1461;
-		if (days > 365) { jy += (days-1)/365; days = (days-1)%365; }
-		int jm = (days < 186) ? (1 + (int)(days/31)) : (7 + (int)((days-186)/30));
-		int jd = (int)(1 + ((days < 186) ? (days%31) : ((days-186)%30)));
-		return new int[]{(int)jy, jm, jd};
-	}
-	/** قالب نمایش جلالی: yyyy/MM/dd با ارقام فارسی */
-	private static String formatJalali(java.util.Date date) {
-		java.util.Calendar gc = java.util.Calendar.getInstance(java.util.Locale.US);
-		gc.setTime(date);
-		int[] j = gregorianToJalali(gc);
-		String s = String.format("%04d/%02d/%02d", j[0], j[1], j[2]);
-		return toPersianDigits(s);
-	}
-	// ------------------------------------------------------------------------
-
 	
 	public static enum DatePatternType {
 		Standard,
@@ -257,7 +217,7 @@ public class DatePattern extends BaseDatePattern implements Comparable<DatePatte
 	
 	@Transient
 	public String getPatternString() {
-		// [JALALI DISPLAY] فقط نمایش: بازه‌ها را جلالی قالب‌دهی می‌کنیم
+		
 		StringBuffer sb = new StringBuffer();
 		boolean first = true;
 		HashMap<Date, Date> dates = getPatternDateStringHashMaps();
@@ -265,8 +225,9 @@ public class DatePattern extends BaseDatePattern implements Comparable<DatePatte
 		ts.addAll(dates.keySet());
 		for(Date startDate: ts){
 			Date endDate = (Date) dates.get(startDate);
-			String startDateStr = formatJalali(startDate);
-			String endDateStr = formatJalali(endDate);
+			Formats.Format<Date> df = Formats.getDateFormat(Formats.Pattern.DATE_SHORT);
+			String startDateStr = df.format(startDate);
+			String endDateStr = df.format(endDate);
 			if (first){
 				first = false;
 			} else {
@@ -274,7 +235,7 @@ public class DatePattern extends BaseDatePattern implements Comparable<DatePatte
 			}
 			sb.append(startDateStr);
 			if (!startDateStr.equals(endDateStr)){
-				sb.append("-").append(endDateStr);
+				sb.append("-" + endDateStr);
 			}
 		}
 		return sb.toString();
@@ -313,6 +274,7 @@ public class DatePattern extends BaseDatePattern implements Comparable<DatePatte
 			for (;d<=daysOfMonth && charPosition < ptrn.length ;d++) {
 				if (ptrn[charPosition] == '1' || (first != null && dayOfWeek == Calendar.SUNDAY && charPosition + 1 < ptrn.length && ptrn[1 + charPosition] == '1')) {
 					if (first==null){
+						//first = ((m<0?12+m:m%12)+1)+"/"+d+"/"+((m>=12)?startYear+1:startYear);
 						cal.setTime(getStartDate());
 						cal.add(Calendar.DAY_OF_YEAR, charPosition);
 						first = cal.getTime();
@@ -323,6 +285,7 @@ public class DatePattern extends BaseDatePattern implements Comparable<DatePatte
 						first=null;
 					}
 				}
+				//previous = ((m<0?12+m:m%12)+1)+"/"+d+"/"+((m>=12)?startYear+1:startYear);
 				cal.setTime(getStartDate());
 				cal.add(Calendar.DAY_OF_YEAR, charPosition);
 				previous = cal.getTime();
@@ -352,6 +315,7 @@ public class DatePattern extends BaseDatePattern implements Comparable<DatePatte
 			Iterator<TimePref> k=clazz.effectivePreferences(TimePref.class).iterator();k.hasNext();) {
 				TimePref tp = (TimePref)k.next();
 				if (tp.getTimePattern().isExactTime()) {
+					//System.out.println("    -- exact time "+tp.getTimePatternModel().getExactDays());
 					int dayCode = tp.getTimePatternModel().getExactDays();
 					
 					for (int x=0;x<getPattern().length();x++) {
@@ -361,6 +325,7 @@ public class DatePattern extends BaseDatePattern implements Comparable<DatePatte
 							days.add(x+offset);
 					}
 				} else {
+					//System.out.println("    -- time pattern "+tp.getTimePattern().getName());
 					TimePatternModel m = tp.getTimePatternModel();
 					boolean req = false;
 					for (int d=0;d<m.getNrDays();d++) {
@@ -373,6 +338,7 @@ public class DatePattern extends BaseDatePattern implements Comparable<DatePatte
 						if (!used) continue;
 						req = true;
 						int dayCode = m.getDayCode(d);
+						//System.out.println("      -- required "+dayCode);
     					for (int x=0;x<getPattern().length();x++) {
     						if (getPattern().charAt(x)!='1') continue;
     						int dayOfWeek = (x+offset+dowOffset) % 7;
@@ -391,6 +357,7 @@ public class DatePattern extends BaseDatePattern implements Comparable<DatePatte
     						if (!used) continue;
     						req = true;
     						int dayCode = m.getDayCode(d);
+    						//System.out.println("      -- not prohibited "+dayCode);
         					for (int x=0;x<getPattern().length();x++) {
         						if (getPattern().charAt(x)!='1') continue;
         						int dayOfWeek = (x+offset+dowOffset) % 7;
@@ -467,24 +434,18 @@ public class DatePattern extends BaseDatePattern implements Comparable<DatePatte
         if (includeScript)
             sb.append("<script language='JavaScript' type='text/javascript' src='scripts/datepatt.js'></script>\n");
 		sb.append("<script language='JavaScript'>\n");
-
-		// [JALALI DISPLAY] نام روزهای هفته به فارسی (فقط لیبل‌ها)
 		sb.append("var CAL_WEEKDAYS = [");
 		for (int i = 0; i < 7; i++) {
 			if (i > 0) sb.append(", ");
-			sb.append("\"" + FA_WEEKDAYS[(i + 6) % 7] + "\"");
+			sb.append("\"" + CONS.days()[(i + 6) % 7] + "\"");
 		}
 		sb.append("];\n");
-
-		// [JALALI DISPLAY] نام ماه‌ها به فارسی (فقط لیبل‌ها)
 		sb.append("var CAL_MONTHS = [");
 		for (int i = 0; i < 12; i++) {
 			if (i > 0) sb.append(", ");
-			sb.append("\"" + FA_MONTHS[i] + "\"");
+			sb.append("\"" + Month.of(1 + i).getDisplayName(TextStyle.FULL_STANDALONE, Localization.getJavaLocale()) + "\"");
 		}
 		sb.append("];\n");
-
-		// بقیه منطق بدون تغییر (محاسبات میلادی)
 		sb.append(
 			"calGenerate2("+getSession().getSessionStartYear()+",\n\t"+
 				(getSession().getPatternStartMonth()) +",\n\t"+
@@ -924,4 +885,3 @@ public class DatePattern extends BaseDatePattern implements Comparable<DatePatte
     	}
     }	
 }
-
